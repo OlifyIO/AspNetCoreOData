@@ -570,8 +570,15 @@ public abstract class ExpressionBinderBase
 
         Expression[] arguments = BindArguments(node.Parameters);
         ValidateAllStringArguments(node.Name, arguments);
+        
+        // NOTE: added optional cast to enable toupper on dynamic properties (MZ)
+        //Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        Contract.Assert(arguments.Length == 1);
 
-        Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        if (arguments[0].Type != typeof(string))
+        {
+            arguments[0] = Expression.Convert(arguments[0], typeof(string));
+        }
 
         return ExpressionBinderHelper.MakeFunctionCall(ClrCanonicalFunctions.ToUpper, QuerySettings, arguments);
     }
@@ -583,7 +590,14 @@ public abstract class ExpressionBinderBase
         Expression[] arguments = BindArguments(node.Parameters);
         ValidateAllStringArguments(node.Name, arguments);
 
-        Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        // NOTE: added optional cast to enable tolower on dynamic properties (MZ)
+        //Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        Contract.Assert(arguments.Length == 1);
+
+        if (arguments[0].Type != typeof(string))
+        {
+            arguments[0] = Expression.Convert(arguments[0], typeof(string));
+        }
 
         return ExpressionBinderHelper.MakeFunctionCall(ClrCanonicalFunctions.ToLower, QuerySettings, arguments);
     }
@@ -796,7 +810,8 @@ public abstract class ExpressionBinderBase
     {
         if (arguments.Any(arg => arg.Type != typeof(string)))
         {
-            throw new ODataException(Error.Format(SRResources.FunctionNotSupportedOnEnum, functionName));
+            // NOTE: commented out to enable tolower/toupper on dynamic properties (MZ)
+            //throw new ODataException(Error.Format(SRResources.FunctionNotSupportedOnEnum, functionName));
         }
     }
 

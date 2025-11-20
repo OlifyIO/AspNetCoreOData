@@ -1097,7 +1097,8 @@ public abstract partial class QueryBinder
     {
         if (arguments.Any(arg => arg.Type != typeof(string)))
         {
-            throw new ODataException(Error.Format(SRResources.FunctionNotSupportedOnEnum, functionName));
+            // NOTE: commented out to enable tolower/toupper on dynamic properties (MZ)
+            //throw new ODataException(Error.Format(SRResources.FunctionNotSupportedOnEnum, functionName));
         }
     }
 

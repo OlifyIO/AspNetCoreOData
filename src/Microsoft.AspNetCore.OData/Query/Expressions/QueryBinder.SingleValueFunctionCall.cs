@@ -283,7 +283,14 @@ public abstract partial class QueryBinder
         Expression[] arguments = BindArguments(node.Parameters, context);
         ValidateAllStringArguments(node.Name, arguments);
 
-        Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        // NOTE: added optional cast to enable toupper on dynamic properties (MZ)
+        //Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        Contract.Assert(arguments.Length == 1);
+
+        if (arguments[0].Type != typeof(string))
+        {
+            arguments[0] = Expression.Convert(arguments[0], typeof(string));
+        }
 
         return ExpressionBinderHelper.MakeFunctionCall(ClrCanonicalFunctions.ToLower, context.QuerySettings, arguments);
     }
@@ -301,7 +308,14 @@ public abstract partial class QueryBinder
         Expression[] arguments = BindArguments(node.Parameters, context);
         ValidateAllStringArguments(node.Name, arguments);
 
-        Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        // NOTE: added optional cast to enable on dynamic properties (MZ)
+        //Contract.Assert(arguments.Length == 1 && arguments[0].Type == typeof(string));
+        Contract.Assert(arguments.Length == 1);
+
+        if (arguments[0].Type != typeof(string))
+        {
+            arguments[0] = Expression.Convert(arguments[0], typeof(string));
+        }
 
         return ExpressionBinderHelper.MakeFunctionCall(ClrCanonicalFunctions.ToUpper, context.QuerySettings, arguments);
     }
